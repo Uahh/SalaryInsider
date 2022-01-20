@@ -15,7 +15,7 @@ print('Waiting......')
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
-    return render_template('test.html')
+    return render_template('index.html')
 
 @app.route('/data', methods=["GET", "POST"])
 def data():
@@ -31,4 +31,4 @@ def error():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=173)
+    app.run(host='0.0.0.0', debug=False, port=173)

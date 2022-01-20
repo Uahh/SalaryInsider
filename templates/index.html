@@ -1,13 +1,113 @@
-<html><head>
+<html>
+
+<head>
 	<meta charset="UTF-8">
-	<title>能不能好好说话？</title>
+	<title>平均薪资计算器</title>
+	<script src="https://unpkg.com/vue@next"></script>
+	<script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
 	<link rel="stylesheet" href="../static/css/base.css">
 	<link rel="stylesheet" href="../static/css/bbk.css">
+	<link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
 	<meta name="viewport" content="width=device-width,user-scalable=0">
-	<meta name="discription" content="拼音首字母缩写释义工具">
+	<!-- <meta name="discription" content=""> -->
+	<style>
+		.el-row {
+			margin-bottom: 50px;
+		}
+
+		.el-row:last-child {
+			margin-bottom: 0;
+		}
+
+		.el-col {
+			border-radius: 4px;
+		}
+
+		.grid-content {
+			border-radius: 4px;
+			min-height: 36px;
+		}
+	</style>
 </head>
+
 <body>
-	<div id="el"><textarea placeholder="输入含有首字母缩写的文字"></textarea></div>
+	<div id="app" style="width:100%; text-align:center">
+		<div id="choose">
+			<el-row>
+				<el-col :span="11">
+					<div class="grid-content">
+						<div id="create_button" style="line-height: 60px; text-align: right;">
+							<el-button id="create" size="large" type="primary">创建</el-button>
+						</div>
+					</div>
+				</el-col>
+
+				<el-col :span="2">
+					<div class="grid-content" style="margin: 20px 0px 0px 0px;">
+						<hr style="transform:rotate(90deg)">
+					</div>
+				</el-col>
+				<el-col :span="11">
+					<div class="grid-content">
+						<div id="join_button" style="line-height: 60px; text-align: left; ">
+							<el-button id="join" size="large" type="primary">加入</el-button>
+						</div>
+					</div>
+				</el-col>
+			</el-row>
+		</div>
+		<div>
+			<el-row>
+				<el-col :span="9">
+					<div class="grid-content">
+					</div>
+				</el-col>
+				<el-col :span="7">
+					<el-form :label-position="labelPosition" label-width="80px" :model="form">
+						<el-form-item label="房间号">
+							<el-input style="width: 140px" v-model="form.number"></el-input>
+						</el-form-item>
+						<el-form-item label="您的薪资">
+							<el-input style="width: 140px" v-model="form.number"></el-input>
+						</el-form-item>
+						<el-button type="primary" @click="onSubmit">立即加入</el-button>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<div class="grid-content">
+					</div>
+				</el-col>
+			</el-row>
+		</div>
+		<div id="create">
+			<el-row>
+				<el-col :span="9">
+					<div class="grid-content">
+					</div>
+				</el-col>
+				<el-col :span="7">
+					<el-form :label-position="labelPosition" label-width="80px" :model="form">
+						<el-form-item label="薪资类型" :label-position="labelPosition">
+							<el-radio-group v-model="form.type">
+								<el-radio label="月薪"></el-radio>
+								<el-radio label="年薪"></el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item label="您的薪资">
+							<el-input style="width: 140px" v-model="form.number"></el-input>
+						</el-form-item>
+						<el-button type="primary" @click="onSubmit">立即创建</el-button>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<div class="grid-content">
+					</div>
+				</el-col>
+			</el-row>
+		</div>
+	</div>
 	<div class="content-box">
 		<h2>例文</h2>
 		<blockquote>
@@ -17,7 +117,8 @@
 				讲个话开头也缩写，srds虽然但是，yjgj有句港句，bbl求求了。（这个谁看得出来你妈的）<br>
 				夸人骂人也都缩写，yjjc一骑绝尘，wdcc弯道超车，yygq阴阳怪气，myss美颜盛世，rnb我也猜了半天，最后被告知是really牛b的意思，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈又硬了呢。<br>
 				最要命的还不是这些，我刚刚看到网友评价什么什么他jb的什么，我以为jb就是jb的意思吧，但联系上下文句子又读不通，想了一分钟，哇，原来jb是姜滨的缩写啊！<br>
-				jb＝姜滨，我离开了。</p>
+				jb＝姜滨，我离开了。
+			</p>
 			<p>@你里哥哥</p>
 		</blockquote>
 
@@ -28,4 +129,28 @@
 		<p><a href="https://github.com/itorr/nbnhhsh" target="_blank">https://github.com/itorr/nbnhhsh</a></p>
 	</div>
 	<script>
+		a = {
+			name: "Form",
+			data() {
+				return {
+					labelPosition: 'left',
+					form: {
+						number: '',
+						type: ''
+					}
+				};
+			},
+			methods: {
+				onSubmit() {
+					console.log('submit!');
+				}
+			}
+		}
+		const create_button = Vue.createApp(a);
+		create_button.use(ElementPlus);
+		create_button.mount("#app");
+
+		// const join_button = Vue.createApp({});
+		// join_button.use(ElementPlus);
+		// join_button.mount("#join_button");
 	</script>
