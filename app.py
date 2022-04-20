@@ -21,8 +21,8 @@ def index():
 
 @app.route('/create_room', methods=["POST"])
 def create_room(salary, people_num):
-    rs.setnx(str(idx), people_num, ex=3600)  # 1小时消除
-    rs.setnx(str(idx) + '_0', salary, ex=3600)
+    rs.setnx(str(idx), people_num, ex=300)  # 1小时消除
+    rs.setnx(str(idx) + '_0', salary, ex=300)
 
 
 @app.route('/join_room', methods=["POST"])
@@ -31,7 +31,7 @@ def create_room(room_num, salary):
     for i in range(1, total):
         if rs.get(str(idx) + '_' + str(i)):
             continue
-        rs.setnx(str(idx) + '_' + str(i), salary, ex=3600)
+        rs.setnx(str(idx) + '_' + str(i), salary, ex=300)
     if rs.get(room_num + '_' + str(total - 1)):
         return True
     return False
