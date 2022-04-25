@@ -5,6 +5,7 @@
 	<title>平均薪资计算器</title>
 	<script src="https://unpkg.com/vue@next"></script>
 	<script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<!-- <link rel="stylesheet" href="../static/css/base.css"> -->
 	<!-- <link rel="stylesheet" href="../static/css/bbk.css"> -->
 	<link rel="stylesheet" href="../static/css/uahh.css">
@@ -51,8 +52,11 @@
 								<el-radio label="年薪"></el-radio>
 							</el-radio-group>
 						</el-form-item>
+						<el-form-item label="人数&ensp;&ensp;&ensp;&ensp;">
+							<el-input style="width: 200px" v-model="form.people"></el-input>
+						</el-form-item>
 						<el-form-item label="您的薪资">
-							<el-input style="width: 200px" v-model="form.number"></el-input>
+							<el-input style="width: 200px" v-model="form.salary"></el-input>
 						</el-form-item>
 							<el-button type="primary" @click="onSubmitCreate">立即创建</el-button>
 						</el-form-item>
@@ -76,10 +80,10 @@
 				<el-col :span="8">
 					<el-form :label-position="labelPosition" :model="form">
 						<el-form-item label="房间号&ensp;&ensp;">
-							<el-input style="width: 200px" v-model="form.number"></el-input>
+							<el-input style="width: 200px" v-model="form.roomNumber"></el-input>
 						</el-form-item>
 						<el-form-item label="您的薪资">
-							<el-input style="width: 200px" v-model="form.number"></el-input>
+							<el-input style="width: 200px" v-model="form.salary"></el-input>
 						</el-form-item>
 							<el-button type="primary"@>立即加入</el-button>
 						</el-form-item>
@@ -114,6 +118,9 @@
 								repeatCount="indefinite"/>
 							</path>
 							</svg>
+							<h3 style="text-align: center;">
+								房间号：52173
+							</h3>
 							<h3 style="text-align: center;">
 								正在等待 (1/4)
 							</h3>
@@ -157,8 +164,10 @@
 					waitShow: false,
 					labelPosition: 'left',
 					form: {
-						number: '',
-						type: ''
+						salary: '',
+						salaryType: '',
+						roomNumber: '',
+						people: ''
 					}
 				};
 			},
@@ -180,6 +189,22 @@
 					this.joinShow = false;
 					this.createShow = false;
 					this.waitShow = true;
+					// let res = axios({
+					// 	method: 'post',
+					// 	url: '/create_room',
+					// 	data: this.form,
+					// }).then(res => {
+           			// })
+					console.log(this.form)
+					axios.post('/create_room', this.form)
+						.then((res) => {
+							//Perform Success Action
+						})
+						.catch((error) => {
+							// error.response.status Check status code
+						}).finally(() => {
+							//Perform action in always
+						});
 				}
 			}
 		}
