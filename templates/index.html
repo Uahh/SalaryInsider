@@ -6,6 +6,7 @@
 	<script src="https://unpkg.com/vue@next"></script>
 	<script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
 	<!-- <link rel="stylesheet" href="../static/css/base.css"> -->
 	<!-- <link rel="stylesheet" href="../static/css/bbk.css"> -->
 	<link rel="stylesheet" href="../static/css/uahh.css">
@@ -85,7 +86,7 @@
 						<el-form-item label="您的薪资">
 							<el-input style="width: 200px" v-model="form.salary"></el-input>
 						</el-form-item>
-							<el-button type="primary"@>立即加入</el-button>
+							<el-button type="primary" @click="onSubmitJoin">立即加入</el-button>
 						</el-form-item>
 						</el-form-item>
 							<el-button type="primary" @click="onBack">返回</el-button>
@@ -100,33 +101,37 @@
 		</div>
 		<div id="wait" v-show="waitShow">
 			<el-row>
-				<el-col :span="9">
+				<el-col :span="8">
 					<div class="grid-content">
 					</div>
 				</el-col>
-					<el-col :span="6">
-						<div class="loader loader--style2" title="1" style="text-align: center;">
-							<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-							width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-							<path fill="#E6A23C" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
-							<animateTransform attributeType="xml"
-								attributeName="transform"
-								type="rotate"
-								from="0 25 25"
-								to="360 25 25"
-								dur="0.6s"
-								repeatCount="indefinite"/>
-							</path>
-							</svg>
-							<h3 style="text-align: center;">
-								房间号：52173
-							</h3>
-							<h3 style="text-align: center;">
-								正在等待 (1/4)
-							</h3>
-						</div>
-					</el-col>
-				<el-col :span="9">
+				<el-col :span="8">
+					<div class="loader loader--style2" title="1" style="text-align: center;">
+						<svg version="1.1" id="loader-1"  x="0px" y="0px"
+						width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+						<path fill="#E6A23C" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
+						<animateTransform attributeType="xml"
+							attributeName="transform"
+							type="rotate"
+							from="0 25 25"
+							to="360 25 25"
+							dur="0.6s"
+							repeatCount="indefinite"/>
+						</path>
+						</svg>
+						<h3 style="text-align: center;">
+							房间号：
+						</h3>
+						<h4 style="text-align: center;">
+							{{ result }}
+						</h4>
+						<el-button :plain="true" v-clipboard:copy="result" v-clipboard:success="onCopy" v-clipboard:error="onError">复制</el-button>
+						<h3 style="text-align: center;">
+							正在等待 (1/4)
+						</h3>
+					</div>
+				</el-col>
+				<el-col :span="8">
 					<div class="grid-content">
 					</div>
 				</el-col>
@@ -164,11 +169,13 @@
 					waitShow: false,
 					labelPosition: 'left',
 					form: {
-						salary: '',
-						salaryType: '',
+						salary: 0,
+						salaryType: '月薪',
 						roomNumber: '',
-						people: ''
-					}
+						roomPeople: '',
+						nowPeople: 0
+					},
+					result: null
 				};
 			},
 			methods: {
@@ -189,22 +196,50 @@
 					this.joinShow = false;
 					this.createShow = false;
 					this.waitShow = true;
-					// let res = axios({
-					// 	method: 'post',
-					// 	url: '/create_room',
-					// 	data: this.form,
-					// }).then(res => {
-           			// })
-					console.log(this.form)
-					axios.post('/create_room', this.form)
-						.then((res) => {
-							//Perform Success Action
-						})
-						.catch((error) => {
-							// error.response.status Check status code
-						}).finally(() => {
-							//Perform action in always
-						});
+					let res = axios({
+						method: 'post',
+						url: '/create_room',
+						data: this.form,
+					})
+					.then((res) => {
+						console.log(res)
+						this.result = res['data']
+					})
+					.catch((error) => {
+						// error.response.status Check status code
+					}).finally(() => {
+						//Perform action in always
+					});
+				},
+				onSubmitJoin() {
+					this.joinShow = false;
+					this.chooseShow = false;
+					this.waitShow = true;
+					this.res = axios({
+						method: 'post',
+						url: '/join_room',
+						data: this.form,
+					})
+					.then((res) => {
+						console.log(res)
+					})
+					.catch((error) => {
+						// error.response.status Check status code
+					}).finally(() => {
+						//Perform action in always
+					});
+				},
+				onCopy(){
+					this.$message({
+						message: '复制成功',
+						type: 'success'
+					});
+				},
+				onError(){
+					this.$message({
+						message: '复制失败',
+						type: 'error'
+					});
 				}
 			}
 		}
