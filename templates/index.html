@@ -1,17 +1,13 @@
 <html>
-
 <head>
 	<meta charset="UTF-8">
 	<title>平均薪资计算器</title>
 	<script src="https://unpkg.com/vue@next"></script>
 	<script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-	<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
-	<!-- <link rel="stylesheet" href="../static/css/base.css"> -->
-	<!-- <link rel="stylesheet" href="../static/css/bbk.css"> -->
 	<link rel="stylesheet" href="../static/css/uahh.css">
 	<link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
-	<meta name="viewport" content="width=device-width,user-scalable=0">
+	<meta name="viewport" content="width=505,user-scalable=0">
 </head>
 
 <body>
@@ -40,29 +36,35 @@
 			</el-row>
 		</div>
 		<div id="create" v-show="createShow">
-			<el-row class="g-container">
+			<el-row>
 				<el-col :span="8">
 					<div class="grid-content">
 					</div>
 				</el-col>
 				<el-col :span="8">
-					<el-form :label-position="labelPosition" :model="form" style="margin: auto;">
+					<el-form :label-position="left" :model="form" style="margin: auto;">
 						<el-form-item label="薪资类型">
-							<el-radio-group v-model="form.type">
+							<el-radio-group v-model="form.salaryType">
 								<el-radio label="月薪"></el-radio>
 								<el-radio label="年薪"></el-radio>
 							</el-radio-group>
 						</el-form-item>
-						<el-form-item label="人数&ensp;&ensp;&ensp;&ensp;">
-							<el-input style="width: 200px" v-model="form.people"></el-input>
+						<el-form-item label="人数&ensp;&ensp;&ensp;&ensp;" prop="roomPeople" :rules="[
+						{ required: true, message: '人数不能为空'},
+						{ type: 'number', message: '人数必须为数字'}
+					  ]">
+							<el-input type="roomPeople" style="width: 200px" v-model.number="form.roomPeople" autocomplete="off"></el-input>
 						</el-form-item>
-						<el-form-item label="您的薪资">
-							<el-input style="width: 200px" v-model="form.salary"></el-input>
+						<el-form-item label="您的薪资" prop="salary" :rules="[
+						  { required: true, message: '薪资不能为空'},
+						  { type: 'number', message: '薪资必须为数字'}
+						]">
+							<el-input type="salary" style="width: 200px" v-model.number="form.salary" autocomplete="off"></el-input>
 						</el-form-item>
-							<el-button type="primary" @click="onSubmitCreate">立即创建</el-button>
+						<el-button type="primary" @click="onSubmitCreate">立即创建</el-button>
 						</el-form-item>
 						</el-form-item>
-							<el-button type="primary" @click="onBack">返回</el-button>
+						<el-button type="primary" @click="onBack">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -79,17 +81,22 @@
 					</div>
 				</el-col>
 				<el-col :span="8">
-					<el-form :label-position="labelPosition" :model="form">
-						<el-form-item label="房间号&ensp;&ensp;">
-							<el-input style="width: 200px" v-model="form.roomNumber"></el-input>
+					<el-form :label-position="left" :model="form">
+						<el-form-item label="房间号&ensp;&ensp;" prop="roomNumber" :rules="[
+						{ required: true, message: '房号不能为空'},
+					  ]">
+							<el-input type="roomNumber" style="width: 200px" v-model="form.roomNumber" autocomplete="off"></el-input>
 						</el-form-item>
-						<el-form-item label="您的薪资">
-							<el-input style="width: 200px" v-model="form.salary"></el-input>
+						<el-form-item label="您的薪资" prop="salary" :rules="[
+						{ required: true, message: '薪资不能为空'},
+						{ type: 'number', message: '薪资必须为数字'}
+					  ]">
+							<el-input type="salary" style="width: 200px" v-model.number="form.salary" autocomplete="off"></el-input>
 						</el-form-item>
-							<el-button type="primary" @click="onSubmitJoin">立即加入</el-button>
+						<el-button type="primary" @click="onSubmitJoin">立即加入</el-button>
 						</el-form-item>
 						</el-form-item>
-							<el-button type="primary" @click="onBack">返回</el-button>
+						<el-button type="primary" @click="onBack">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -106,28 +113,49 @@
 					</div>
 				</el-col>
 				<el-col :span="8">
-					<div class="loader loader--style2" title="1" style="text-align: center;">
-						<svg version="1.1" id="loader-1"  x="0px" y="0px"
-						width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-						<path fill="#E6A23C" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
-						<animateTransform attributeType="xml"
-							attributeName="transform"
-							type="rotate"
-							from="0 25 25"
-							to="360 25 25"
-							dur="0.6s"
-							repeatCount="indefinite"/>
-						</path>
+					<div class="loader loader--style2" style="text-align: center;">
+						<svg version="1.1" id="loader-1" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 50 50"
+							style="enable-background:new 0 0 50 50;" xml:space="preserve">
+							<path fill="#E6A23C"
+								d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
+								<animateTransform attributeType="xml" attributeName="transform" type="rotate"
+									from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" />
+							</path>
 						</svg>
 						<h3 style="text-align: center;">
 							房间号：
 						</h3>
-						<h4 style="text-align: center;">
-							{{ result }}
+						<h4 id="needCopy" style="text-align: center;">
+							{{ form.roomNumber }}
 						</h4>
-						<el-button :plain="true" v-clipboard:copy="result" v-clipboard:success="onCopy" v-clipboard:error="onError">复制</el-button>
+						<el-button v-show="copyShow" type="primary" @click="onCopy">复制</el-button>
 						<h3 style="text-align: center;">
-							正在等待 (1/4)
+							正在等待 ({{ form.nowPeople }}/{{ form.roomPeople }})
+						</h3>
+					</div>
+				</el-col>
+				<el-col :span="8">
+					<div class="grid-content">
+					</div>
+				</el-col>
+			</el-row>
+		</div>
+		<div id="wait" v-show="resultShow">
+			<el-row>
+				<el-col :span="8">
+					<div class="grid-content">
+					</div>
+				</el-col>
+				<el-col :span="8">
+					<div class="loader loader--style2" style="text-align: center;">
+						<h3 style="text-align: center;">
+							薪资类型：{{ form.salaryType }}
+						</h3>
+						<h3 style="text-align: center;">
+							房间人数：{{ form.nowPeople }}
+						</h3>
+						<h3 style="text-align: center;">
+							平均薪资：{{ form.salary }}
 						</h3>
 					</div>
 				</el-col>
@@ -138,112 +166,22 @@
 			</el-row>
 		</div>
 	</div>
-	<!-- <div class="content-box">
-		<h2>例文</h2>
+	<div class="content-box">
+		<h2>这是什么？</h2>
+		<p>平均工资计算器。</p>
 		<blockquote>
-			<p>草这个tmd网络世界我真的太恨缩写了。</p>
 			<p>
-				随便点开一条微博，艺人名字要缩写，gzs工作室也要缩写，gc广场他妈的也是缩写，hgr老子猜了老半天，百度一下才知道是韩国人，拳头硬了。<br>
-				讲个话开头也缩写，srds虽然但是，yjgj有句港句，bbl求求了。（这个谁看得出来你妈的）<br>
-				夸人骂人也都缩写，yjjc一骑绝尘，wdcc弯道超车，yygq阴阳怪气，myss美颜盛世，rnb我也猜了半天，最后被告知是really牛b的意思，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈又硬了呢。<br>
-				最要命的还不是这些，我刚刚看到网友评价什么什么他jb的什么，我以为jb就是jb的意思吧，但联系上下文句子又读不通，想了一分钟，哇，原来jb是姜滨的缩写啊！<br>
-				jb＝姜滨，我离开了。
+				五个人想知道他们的平均工资，如何在不互相告知的情况下计算出呢？</br>
+				找个计算器，将显示器蒙上，然后把自己的收入加上去，之后依次传给其他人，每人都把自己的收入加上之前的数，最后除以人数，即可得到大家的平均。</br>
 			</p>
-			<p>@你里哥哥</p>
 		</blockquote>
-
-		<h2>为什么做这东西？</h2>
-		<p>社交平台上通过拼音首字母缩写指代特定词句的情况越来越多，为了让更多人能勉强理解这一门另类沟通方式、做了这一个划词转义工具。</p>
-
+		<p>这个网站就实现了这个功能。</p>
+		<h2>使用说明</h2>
+		<p>如果您是组织者，请点击创建，输入参与人数和自己的薪资，点击立即创建。将房间号码分发给其他人。不要关闭或刷新页面，等所有人输入完毕后，即可显示大家的平均薪资。</p>
+		<p>如果您是参与者，请直接输入组织者给您的房间号，和自己的薪资，提交后请不要关闭或刷新页面，等所有人输入完毕后，即可显示大家的平均薪资。</p>
+		<p>如果不小心关闭了页面，可以点击加入，输入刚才的房间号，并将薪资写为0，即可重新加入刚刚的房间</p>
+		<p>每个房间只有十分钟的存活时间。</br>请放心，本网站不会保存任何数据</p>
 		<h2>仓库地址</h2>
 		<p><a href="https://github.com/itorr/nbnhhsh" target="_blank">https://github.com/itorr/nbnhhsh</a></p>
-	</div> -->
-	<script>
-		v = {
-			name: "Form",
-			data() {
-				return {
-					chooseShow: true,
-					createShow: false,
-					joinShow: false,
-					waitShow: false,
-					labelPosition: 'left',
-					form: {
-						salary: 0,
-						salaryType: '月薪',
-						roomNumber: '',
-						roomPeople: '',
-						nowPeople: 0
-					},
-					result: null
-				};
-			},
-			methods: {
-				onCreate() {
-					this.createShow = true;
-					this.chooseShow = false;
-				},
-				onJoin() {
-					this.joinShow = true;
-					this.chooseShow = false;
-				},
-				onBack() {
-					this.joinShow = false;
-					this.createShow = false;
-					this.chooseShow = true;
-				},
-				onSubmitCreate() {
-					this.joinShow = false;
-					this.createShow = false;
-					this.waitShow = true;
-					let res = axios({
-						method: 'post',
-						url: '/create_room',
-						data: this.form,
-					})
-					.then((res) => {
-						console.log(res)
-						this.result = res['data']
-					})
-					.catch((error) => {
-						// error.response.status Check status code
-					}).finally(() => {
-						//Perform action in always
-					});
-				},
-				onSubmitJoin() {
-					this.joinShow = false;
-					this.chooseShow = false;
-					this.waitShow = true;
-					this.res = axios({
-						method: 'post',
-						url: '/join_room',
-						data: this.form,
-					})
-					.then((res) => {
-						console.log(res)
-					})
-					.catch((error) => {
-						// error.response.status Check status code
-					}).finally(() => {
-						//Perform action in always
-					});
-				},
-				onCopy(){
-					this.$message({
-						message: '复制成功',
-						type: 'success'
-					});
-				},
-				onError(){
-					this.$message({
-						message: '复制失败',
-						type: 'error'
-					});
-				}
-			}
-		}
-		const V = Vue.createApp(v);
-		V.use(ElementPlus);
-		V.mount("#app");
-	</script>
+	</div>
+	<script src="../static/js/main.js" defer></script>
